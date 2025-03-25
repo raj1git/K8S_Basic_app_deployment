@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t raj1git/K8S_Basic_app_deployment -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true raj1git/K8S_Basic_app_deployment npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "frontend"
+  env: "Frontend-env"
+  bucket_name: "elasticbeanstalk-us-east-1-854601783579"
+  bucket_path: "frontend"
+  on:
+    branch: master
+  aws_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
