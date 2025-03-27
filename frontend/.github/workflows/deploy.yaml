@@ -1,0 +1,29 @@
+name: Deploy Frontend
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker build -t raj1git/K8S_Basic_app_deployment -f Dockerfile.dev .
+      - run: docker run -e CI=true raj1git/K8S_Basic_app_deployment npm test
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: raj1git/K8S_Basic_app_deployment@v18
+        with:
+          application_name: frontend
+          environment_name: Frontend-env
+          existing_bucket_name: elasticbeanstalk-us-east-1-854601783579
+          region: us-east-1
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
