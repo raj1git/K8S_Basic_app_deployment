@@ -17,7 +17,7 @@ jobs:
         run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy to EB
-        uses: raj1git/K8S_Basic_app_deployment@v18
+        uses: einaregilsson/beanstalk-deploy@v18
         with:
           application_name: frontend
           environment_name: Frontend-env
