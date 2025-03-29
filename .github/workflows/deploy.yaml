@@ -27,6 +27,7 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
+      - name: Deploy to EB -step 2
         run: |
            elasticbeanstalk create-application-version --application-name frontend --version-label ${{ github.sha }}
            aws elasticbeanstalk update-environment --environment-name Frontend-env --version-label ${{ github.sha }}
