@@ -18,14 +18,16 @@ jobs:
 
       - name: Deploy to EB
         uses: raj1git/K8S_Basic_app_deployment@v1
-        # with:
-        #   application_name: frontend
-        #   environment_name: Frontend-env
-        #   existing_bucket_name: elasticbeanstalk-us-east-1-854601783579
-        #   region: us-east-1
-        #   # aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
-        #   # aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
-        #   version_label: ${{ github.sha }}
-        #   deployment_package: deploy.zip
-
+        with:
+          application_name: frontend
+          environment_name: Frontend-env
+          existing_bucket_name: elasticbeanstalk-us-east-1-854601783579
+          region: us-east-1
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY }}
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
+        run: |
+           elasticbeanstalk create-application-version --application-name frontend --version-label ${{ github.sha }}
+           aws elasticbeanstalk update-environment --environment-name Frontend-env --version-label ${{ github.sha }}
 
